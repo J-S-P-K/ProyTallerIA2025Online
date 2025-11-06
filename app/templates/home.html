@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+      $(document).ready(function() {
+          $( "#target" ).on( "click", function() {
+                    $.get( "http://127.0.0.1:5000/train", function( data ) {
+                                  /*  $( ".result" ).html( data ); */
+                                  alert('Entrenado!');
+                                  location.reload();
+                            });
+                    } );
+          $( "#target2" ).on( "click", function() {
+                    $.get( "http://127.0.0.1:5000/resetandtrain", function( data ) {
+                                  /*  $( ".result" ).html( data ); */
+                                  alert('Reseteado y entrenado!');
+                                  location.reload();
+                            });
+                    } );
+
+      })
+    </script>
+  </head>
+  <body>
+    <h1>Agregar pregunta y respuesta</h1>
+    <form method="POST" action="/">
+      <label >Tag</label>
+      <input type="text" name="tag">
+      <label >Pregunta</label>
+      <input type="text" name="patterns">
+      <label >Respuesta</label>
+      <input type="text" name="responses">
+      <input type="submit" value="Agregar">
+    </form>
+
+    <h1>Preguntas y respuestas agregadas</h1>
+    <h3>Tratar que las preguntas utilicen palabras diferentes!</h3>
+    <table>
+      {% for intent in intents %}
+        <tr>
+          <!-- <td>
+            Preguntas y respuestas cargadas: 
+          </td> -->
+          <td>
+            <form method="POST" action="./actualizar" style="display: inline">
+              <input type="hidden" value="{{intent.tag}}" name="oldtag">
+              <input type="text" value="{{intent.tag}}" name="newtag">
+              <input type="hidden" value="{{intent.patterns}}" name="oldpatterns">
+              <input type="text" value="{{intent.patterns}}" name="newpatterns">
+              <input type="hidden" value="{{intent.responses}}" name="oldresponses">
+              <input type="text" value="{{intent.responses}}" name="newresponses">
+              <input type="submit" value="Actualizar">
+            </form>
+          </td>
+          <td>
+            <form method="POST" action="./eliminar" style="display: inline">
+              <input type="hidden" value="{{intent.tag}}" name="tag">
+              <input type="submit" value="eliminar">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <div>
+      <h2>Entrenar</h2>
+      <div><button id="target">Entrenar</button></div>
+  </div>
+  <div>
+    <h2>Resetear  y Entrenar</h2>
+    <div><button id="target2">Reset</button></div>
+</div>
+  </body>
+</html>

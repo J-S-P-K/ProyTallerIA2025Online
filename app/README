@@ -1,0 +1,36 @@
+
+# Paso 1: Descargar el repositorio
+https://github.com/profermarquez/chatbotorch_flask.git
+
+# Paso 2 crear e iniciar el entornovirtual
+virtualenv env
+Ingresar dentro de la carpeta env/Scrips y ejecutar el archivo activate.bat
+
+# Paso 3: Instalar las dependencias 
+
+pip install nltk
+pip install numpy
+pip install gradio #tengo que sacar 
+pip install torch
+pip install Flask
+pip install flask-cors
+pip install Flask-SQLAlchemy
+pip install SQLAlchemy
+pip install flask-socketio
+
+o ejecutar en el directorio raiz: pip install -r requirements.txt
+
+# Paso 4: Ejecutar en el directorio raiz del proyecto
+flask --app app run
+Eso levanta el 
+
+# Paso 5: Ingresar al backend, donde se puede,c argar las nuevas preguntas y respuestas, entrenar 
+127.0.0.1:5000/
+
+# Paso 6: Chatear
+127.0.0.1:5000/chat
+
+
+
+
+

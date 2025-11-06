@@ -1,0 +1,14 @@
+{"time":"2023-06-22 09:30:29.475745", "event":"error", "details":"No se entiende la pregunta", "value":"Me dice error 404"}
+{"time":"2023-06-22 09:31:08.366699", "event":"error", "details":"No se entiende la pregunta", "value":"mi mama es humana??"}
+{"time":"2023-08-02 17:31:03.080966", "event":"error", "details":"No se entiende la pregunta", "value":"hola"}
+{"time":"2023-08-04 20:12:09.340025", "event":"error", "details":"No se entiende la pregunta", "value":"hola"}
+{"time":"2023-08-04 20:12:12.340512", "event":"error", "details":"No se entiende la pregunta", "value":"hello"}
+{"time":"2023-08-04 20:12:14.669552", "event":"error", "details":"No se entiende la pregunta", "value":"h"}
+{"time":"2023-08-04 20:12:25.324873", "event":"error", "details":"No se entiende la pregunta", "value":"Hola"}
+{"time":"2023-08-04 20:12:30.397690", "event":"error", "details":"No se entiende la pregunta", "value":"Hello"}
+{"time":"2023-08-05 17:15:07.120947", "event":"error", "details":"No se entiende la pregunta", "value":"Hola!"}
+{"time":"2023-08-05 17:15:09.655280", "event":"error", "details":"No se entiende la pregunta", "value":"hola"}
+{"time":"2023-08-05 17:15:11.984097", "event":"error", "details":"No se entiende la pregunta", "value":"hola"}
+{"time":"2023-08-05 17:15:14.031336", "event":"error", "details":"No se entiende la pregunta", "value":"Hoila"}
+{"time":"2023-08-05 17:15:22.864092", "event":"error", "details":"No se entiende la pregunta", "value":"Hola!"}
+{"time":"2023-08-05 17:15:26.367969", "event":"error", "details":"No se entiende la pregunta", "value":"hola"}
