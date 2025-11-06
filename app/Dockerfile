@@ -12,5 +12,6 @@ EXPOSE 5000
 COPY . .
 #RUN cd /docs
 #RUN flask --app app run
-CMD ["flask", "--app", "app", "run"]
+CMD ["python", "app.py"]
+
 #CMD ["python","/docs/static/chat.py"]
