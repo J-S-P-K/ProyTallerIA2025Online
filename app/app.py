@@ -34,8 +34,8 @@ db = SQLAlchemy(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='127.0.0.1', port=port)
+    port = int(os.environ.get("PORT", 10000))
+    socketio.run(app, host="0.0.0.0", port=port, debug=True)
 
 """ @app.route('/')
 @cross_origin()
@@ -241,3 +241,4 @@ def connect():
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected', request.sid)
+
