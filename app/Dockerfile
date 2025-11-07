@@ -1,17 +1,22 @@
 # syntax=docker/dockerfile:1
 FROM python:3.10.11
+
 WORKDIR /docs
-ENV FLASK_APP=backend.py
+
+# Variables de entorno
+ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
-#RUN apk add --no-cache gcc musl-dev linux-headers
+
+# Instalar dependencias
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-EXPOSE 5000
+# Render expone automáticamente el puerto $PORT (usualmente 10000)
+# por eso se recomienda hacer esto:
+EXPOSE 10000
 
+# Copiar todo el código
 COPY . .
-#RUN cd /docs
-#RUN flask --app app run
-CMD ["python", "app.py"]
 
-#CMD ["python","/docs/static/chat.py"]
+# Ejecutar el servidor Flask con SocketIO
+CMD ["python", "app.py"]
