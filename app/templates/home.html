@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
       integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
       crossorigin="anonymous"></script>
@@ -47,7 +49,7 @@
       {% for intent in intents %}
         <tr>
           <td>
-            <form method="POST" action="./actualizar" style="display: inline">
+            <form method="POST" action="/actualizar" style="display: inline">
               <input type="hidden" value="{{intent.tag}}" name="oldtag">
               <input type="text" value="{{intent.tag}}" name="newtag">
               <input type="hidden" value="{{intent.patterns}}" name="oldpatterns">
@@ -58,7 +60,7 @@
             </form>
           </td>
           <td>
-            <form method="POST" action="./eliminar" style="display: inline">
+            <form method="POST" action="/eliminar" style="display: inline">
               <input type="hidden" value="{{intent.tag}}" name="tag">
               <input type="submit" value="eliminar">
             </form>
