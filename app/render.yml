@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: chatbot-app
+    name: proytalleria2025online
     env: docker
     plan: free
-    dockerfilePath: ./Dockerfile
+    autoDeploy: true
     envVars:
       - key: PORT
-        value: 10000
+        value: 5000
