@@ -1,93 +1,64 @@
-<!DOCTYPE html>
-<html lang="es">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>Panel de Entrenamiento del Chatbot</title>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-      integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-      crossorigin="anonymous"
-    ></script>
+    <meta charset="UTF-8">
+    <title>Entrenamiento Chatbot</title>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-      $(document).ready(function () {
-        // Entrenar modelo
-        $("#target").on("click", function () {
-          $.get("/train", function (data) {
-            alert("✅ Entrenado con éxito!");
-            location.reload();
-          }).fail(function () {
-            alert("❌ Error al entrenar el modelo.");
-          });
-        });
+      $(document).ready(function() {
+          // Detecta si está en Render o en local
+          var baseUrl =
+              window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                  ? "http://127.0.0.1:5000"
+                  : window.location.origin;
 
-        // Resetear y entrenar
-        $("#target2").on("click", function () {
-          $.get("/resetandtrain", function (data) {
-            alert("🔄 Reseteado y entrenado!");
-            location.reload();
-          }).fail(function () {
-            alert("❌ Error al resetear y entrenar.");
+          // Entrenar modelo
+          $("#target").on("click", function() {
+              $.ajax({
+                  url: baseUrl + "/train",
+                  type: "POST",
+                  contentType: "application/json",
+                  data: JSON.stringify({ accion: "entrenar" }),
+                  success: function(data) {
+                      alert("Entrenado correctamente!");
+                      location.reload();
+                  },
+                  error: function() {
+                      alert("Error al entrenar el modelo.");
+                  }
+              });
           });
-        });
+
+          // Resetear y entrenar modelo
+          $("#target2").on("click", function() {
+              $.ajax({
+                  url: baseUrl + "/resetandtrain",
+                  type: "POST",
+                  contentType: "application/json",
+                  data: JSON.stringify({ accion: "resetear" }),
+                  success: function(data) {
+                      alert("Reseteado y entrenado!");
+                      location.reload();
+                  },
+                  error: function() {
+                      alert("Error al resetear el modelo.");
+                  }
+              });
+          });
       });
     </script>
-
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 30px;
-      }
-
-      input[type="text"],
-      input[type="submit"] {
-        margin: 5px;
-        padding: 5px;
-      }
-
-      table {
-        margin-top: 15px;
-        border-collapse: collapse;
-      }
-
-      td {
-        padding: 5px;
-        border: 1px solid #ccc;
-      }
-
-      h1, h2, h3 {
-        color: #333;
-      }
-
-      button {
-        padding: 8px 12px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #0056b3;
-      }
-    </style>
   </head>
 
   <body>
     <h1>Agregar pregunta y respuesta</h1>
-
     <form method="POST" action="/">
       <label>Tag</label>
-      <input type="text" name="tag" required />
-
+      <input type="text" name="tag">
       <label>Pregunta</label>
-      <input type="text" name="patterns" required />
-
+      <input type="text" name="patterns">
       <label>Respuesta</label>
-      <input type="text" name="responses" required />
-
-      <input type="submit" value="Agregar" />
+      <input type="text" name="responses">
+      <input type="submit" value="Agregar">
     </form>
 
     <h1>Preguntas y respuestas agregadas</h1>
@@ -95,28 +66,25 @@
 
     <table>
       {% for intent in intents %}
-      <tr>
-        <td>
-          <form method="POST" action="./actualizar" style="display: inline">
-            <input type="hidden" value="{{intent.tag}}" name="oldtag" />
-            <input type="text" value="{{intent.tag}}" name="newtag" />
-
-            <input type="hidden" value="{{intent.patterns}}" name="oldpatterns" />
-            <input type="text" value="{{intent.patterns}}" name="newpatterns" />
-
-            <input type="hidden" value="{{intent.responses}}" name="oldresponses" />
-            <input type="text" value="{{intent.responses}}" name="newresponses" />
-
-            <input type="submit" value="Actualizar" />
-          </form>
-        </td>
-        <td>
-          <form method="POST" action="./eliminar" style="display: inline">
-            <input type="hidden" value="{{intent.tag}}" name="tag" />
-            <input type="submit" value="Eliminar" />
-          </form>
-        </td>
-      </tr>
+        <tr>
+          <td>
+            <form method="POST" action="./actualizar" style="display: inline">
+              <input type="hidden" value="{{intent.tag}}" name="oldtag">
+              <input type="text" value="{{intent.tag}}" name="newtag">
+              <input type="hidden" value="{{intent.patterns}}" name="oldpatterns">
+              <input type="text" value="{{intent.patterns}}" name="newpatterns">
+              <input type="hidden" value="{{intent.responses}}" name="oldresponses">
+              <input type="text" value="{{intent.responses}}" name="newresponses">
+              <input type="submit" value="Actualizar">
+            </form>
+          </td>
+          <td>
+            <form method="POST" action="./eliminar" style="display: inline">
+              <input type="hidden" value="{{intent.tag}}" name="tag">
+              <input type="submit" value="eliminar">
+            </form>
+          </td>
+        </tr>
       {% endfor %}
     </table>
 
@@ -127,7 +95,7 @@
 
     <div>
       <h2>Resetear y Entrenar</h2>
-      <div><button id="target2">Resetear</button></div>
+      <div><button id="target2">Reset</button></div>
     </div>
   </body>
 </html>
