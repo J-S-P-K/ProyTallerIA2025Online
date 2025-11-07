@@ -3,41 +3,63 @@ from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO
 
 # Crear la app Flask
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates", static_folder="static")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Ruta raíz (para verificar que el servidor funcione)
-@app.route('/')
+# ---------------------------
+# RUTAS PRINCIPALES
+# ---------------------------
+
+# Home (interfaz de backend)
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return "Servidor Flask corriendo correctamente ✅. Rutas disponibles: /chat y /train"
+    if request.method == "POST":
+        # Ejemplo: guardar nuevas preguntas y respuestas
+        tag = request.form.get("tag")
+        patterns = request.form.get("patterns")
+        responses = request.form.get("responses")
+        print(f"Nueva entrada: {tag}, {patterns}, {responses}")
+        # Aquí podrías guardar en intents.json o base de datos
+    return render_template("home.html", intents=[])
 
-# Ruta para el chat (frontend)
-@app.route('/chat')
+# Ruta para chat
+@app.route("/chat")
 def chat():
-    return render_template('chat4.html')
+    return render_template("chat4.html")
 
-# Ruta para entrenar el modelo (backend)
-@app.route('/train', methods=['POST'])
+# Entrenar modelo
+@app.route("/train", methods=["GET"])
 def train():
-    data = request.json
-    # Aquí podés agregar tu lógica de entrenamiento o cargar el modelo
-    # Ejemplo:
-    print("Entrenando modelo con:", data)
+    print("Entrenando modelo...")
+    # Aquí podrías cargar y entrenar el modelo real
     return jsonify({"status": "Modelo entrenado con éxito"})
 
-# Ejemplo de endpoint para predicción
-@app.route('/predict', methods=['POST'])
+# Resetear y entrenar
+@app.route("/resetandtrain", methods=["GET"])
+def reset_and_train():
+    print("Reseteando y entrenando modelo...")
+    # Lógica real de reset + entrenamiento
+    return jsonify({"status": "Modelo reseteado y entrenado con éxito"})
+
+# Endpoint de predicción
+@app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
-    # Acá iría tu lógica de predicción real
-    return jsonify({"respuesta": "Hola desde el backend Flask!"})
+    msg = data.get("mensaje", "")
+    respuesta = f"Echo desde backend: {msg}"
+    return jsonify({"respuesta": respuesta})
 
-# Eventos SocketIO
-@socketio.on('message')
+# ---------------------------
+# SOCKET.IO EVENTOS
+# ---------------------------
+@socketio.on("message")
 def handle_message(msg):
-    print('Mensaje recibido:', msg)
+    print(f"Mensaje recibido: {msg}")
     socketio.send(f"Echo: {msg}")
 
+# ---------------------------
+# EJECUCIÓN PRINCIPAL
+# ---------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True)
