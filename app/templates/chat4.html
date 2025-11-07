@@ -1,144 +1,61 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chatbot - Render</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-    integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-    crossorigin="anonymous"
-  ></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Detecta si está en Render o local
+            var socketUrl =
+                window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                    ? "http://127.0.0.1:5000"
+                    : window.location.origin;
 
-  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+            // Conecta con el servidor Socket.IO
+            var socket = io(socketUrl, { transports: ["websocket", "polling"] });
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      // Detecta si estás en Render o local
-      const socketUrl =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1"
-          ? "http://127.0.0.1:5000"
-          : window.location.origin;
+            socket.on('connect', function() {
+                socket.emit('my_event', { data: "I'm connected!" });
+                $('#log').append('<br>Conectado al servidor');
+            });
 
-      // Conexión automática al backend
-      const socket = io(socketUrl, {
-        transports: ["websocket", "polling"],
-      });
+            socket.on('my_response', function(msg, cb) {
+                var respuesta = msg && msg.data ? msg.data : "hola";
+                $('#log').append('<br>' + $('<div/>').text(respuesta).html());
+                if (cb) cb();
+            });
 
-      // Confirmar conexión
-      socket.on("connect", function () {
-        $("#status").text("🟢 Conectado al servidor");
-      });
+            $('form#emit').submit(function(event) {
+                var texto = $('#emit_data').val();
+                if (texto.trim() !== "") {
+                    socket.emit('my_event', { data: texto });
+                    $("#emit_data").val("");
+                }
+                return false;
+            });
 
-      // Mostrar mensajes recibidos
-      socket.on("message", function (msg) {
-        $("#log").append(`<div class="bot">🤖 ${msg}</div>`);
-      });
-
-      // Enviar mensaje al presionar “Preguntar”
-      $("form#emit").submit(function (event) {
-        event.preventDefault();
-        const message = $("#emit_data").val();
-        if (message.trim() === "") return;
-        $("#log").append(`<div class="user">🧑 ${message}</div>`);
-        socket.send(message);
-        $("#emit_data").val("");
-      });
-
-      socket.on("disconnect", function () {
-        $("#status").text("🔴 Desconectado");
-      });
-    });
-  </script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fafafa;
-      color: #333;
-      margin: 20px;
-    }
-
-    h1 {
-      color: #007bff;
-    }
-
-    #status {
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    #chatbox {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 10px;
-      width: 90%;
-      max-width: 600px;
-      height: 400px;
-      overflow-y: auto;
-      background: #fff;
-    }
-
-    .user {
-      text-align: right;
-      background: #e0f7fa;
-      padding: 5px 10px;
-      margin: 5px;
-      border-radius: 10px;
-    }
-
-    .bot {
-      text-align: left;
-      background: #f1f1f1;
-      padding: 5px 10px;
-      margin: 5px;
-      border-radius: 10px;
-    }
-
-    form {
-      margin-top: 10px;
-    }
-
-    input[type="text"] {
-      width: 75%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    input[type="submit"] {
-      padding: 10px 15px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #0056b3;
-    }
-  </style>
+            $('form#disconnect').submit(function(event) {
+                socket.emit('disconnect_request');
+                return false;
+            });
+        });
+    </script>
 </head>
-
 <body>
-  <h1>Chatbot</h1>
-  <div id="status">🟡 Conectando...</div>
+    <h1>Chatbot</h1>
 
-  <div id="chatbox">
-    <div id="log"></div>
-  </div>
+    <div>
+        <h2>Recibido:</h2>
+        <div id="log"></div>
+    </div>
 
-  <form id="emit" method="POST" action="#">
-    <input
-      type="text"
-      name="emit_data"
-      id="emit_data"
-      placeholder="Escriba su pregunta..."
-    />
-    <input type="submit" value="Preguntar" />
-  </form>
+    <form id="emit" method="POST" action="#">
+        <input type="text" name="emit_data" id="emit_data" placeholder="Escriba su pregunta...">
+        <input id="input_chat" type="submit" value="Preguntar">
+    </form>
 </body>
 </html>
