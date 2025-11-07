@@ -1,34 +1,42 @@
 <html>
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+      integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+      crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
       $(document).ready(function() {
-          $( "#target" ).on( "click", function() {
-                    $.get( "http://127.0.0.1:5000/train", function( data ) {
-                                  /*  $( ".result" ).html( data ); */
-                                  alert('Entrenado!');
-                                  location.reload();
-                            });
-                    } );
-          $( "#target2" ).on( "click", function() {
-                    $.get( "http://127.0.0.1:5000/resetandtrain", function( data ) {
-                                  /*  $( ".result" ).html( data ); */
-                                  alert('Reseteado y entrenado!');
-                                  location.reload();
-                            });
-                    } );
 
-      })
+        // URL base dinámica (Render o local)
+        const baseUrl = window.location.origin;
+
+        $("#target").on("click", function() {
+          $.get(baseUrl + "/train", function(data) {
+            alert('Entrenado!');
+            location.reload();
+          }).fail(function() {
+            alert("Error al intentar entrenar.");
+          });
+        });
+
+        $("#target2").on("click", function() {
+          $.get(baseUrl + "/resetandtrain", function(data) {
+            alert('Reseteado y entrenado!');
+            location.reload();
+          }).fail(function() {
+            alert("Error al intentar resetear y entrenar.");
+          });
+        });
+      });
     </script>
   </head>
   <body>
     <h1>Agregar pregunta y respuesta</h1>
     <form method="POST" action="/">
-      <label >Tag</label>
+      <label>Tag</label>
       <input type="text" name="tag">
-      <label >Pregunta</label>
+      <label>Pregunta</label>
       <input type="text" name="patterns">
-      <label >Respuesta</label>
+      <label>Respuesta</label>
       <input type="text" name="responses">
       <input type="submit" value="Agregar">
     </form>
@@ -38,9 +46,6 @@
     <table>
       {% for intent in intents %}
         <tr>
-          <!-- <td>
-            Preguntas y respuestas cargadas: 
-          </td> -->
           <td>
             <form method="POST" action="./actualizar" style="display: inline">
               <input type="hidden" value="{{intent.tag}}" name="oldtag">
@@ -65,10 +70,10 @@
     <div>
       <h2>Entrenar</h2>
       <div><button id="target">Entrenar</button></div>
-  </div>
-  <div>
-    <h2>Resetear  y Entrenar</h2>
-    <div><button id="target2">Reset</button></div>
-</div>
+    </div>
+    <div>
+      <h2>Resetear y Entrenar</h2>
+      <div><button id="target2">Reset</button></div>
+    </div>
   </body>
 </html>
