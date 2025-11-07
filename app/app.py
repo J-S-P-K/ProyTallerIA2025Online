@@ -8,7 +8,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 INTENTS_PATH = "intents.json"
 
-# 🧠 Función auxiliar
+# 🧠 Funciones auxiliares
 def cargar_intents():
     if os.path.exists(INTENTS_PATH):
         with open(INTENTS_PATH, "r", encoding="utf-8") as f:
@@ -37,7 +37,6 @@ def home():
                 "responses": [responses]
             })
             guardar_intents(intents)
-        return render_template("home.html", intents=intents)
 
     return render_template("home.html", intents=intents)
 
@@ -73,16 +72,18 @@ def eliminar():
 
 
 # 🚀 Entrenar modelo (simulado)
-@app.route("/train", methods=["GET", "POST"])
+@app.route("/train", methods=["GET"])
 def train():
     print("Entrenando modelo...")
+    # Aquí iría tu lógica real de entrenamiento si la tienes
     return jsonify({"status": "Modelo entrenado con éxito"})
 
 
 # 🔄 Resetear y entrenar (simulado)
-@app.route("/resetandtrain", methods=["GET", "POST"])
+@app.route("/resetandtrain", methods=["GET"])
 def resetandtrain():
     print("Reseteando y reentrenando modelo...")
+    # Aquí podrías reiniciar el JSON o limpiar datos si lo deseas
     return jsonify({"status": "Modelo reseteado y entrenado"})
 
 
@@ -92,7 +93,7 @@ def chat():
     return render_template("chat4.html")
 
 
-# 🧠 Predicción simple (por ahora simulada)
+# 🧠 Predicción simple (simulada)
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
@@ -102,13 +103,14 @@ def predict():
     return jsonify({"respuesta": "Hola desde el backend Flask!"})
 
 
-# 🧩 SocketIO
+# ⚡ SocketIO (opcional)
 @socketio.on("message")
 def handle_message(msg):
     print("Mensaje recibido:", msg)
     socketio.send(f"Echo: {msg}")
 
 
+# 🚀 Iniciar servidor
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True)
